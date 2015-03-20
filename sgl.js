@@ -14,7 +14,6 @@ module.exports = {
 execute: function(sgl){
 	this.visitor(sgl);
 	this.syntax();
-	console.log(this.q);
 	return this.q;
 },
  lex : Array(),			  
@@ -58,7 +57,6 @@ for(var n in this.lex){
 
 visitor: function (str){
 
-console.log(str);
 str=str.trim();
 if(str && str.length>0){
 var ok = false;
@@ -98,6 +96,9 @@ return m;
         WHERE : "where",
         INTERACTION : "model",
         SAVETO : "saveas",
+        OPERATION : "operation",
+        RESET : "reset",
+        GET : "get",
         AT : "at",
         DATE: "\"[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}",
         TIME: "[0-9]{1,2}(:[0-9]{1,2}){0,1}(:[0-9]{1,2}){0,1}\"",
@@ -110,7 +111,7 @@ return m;
         HIPON:  "\{"+tokens.cl+"\}[0-9][0-9]",
         CL :   tokens.cl,
         NUMMODEL: "\{[-+]?([0-9]+\.[0-9]+|[0-9]+)\}",
-        NAME: "([a-z]+|[0.9]+)+[0-9]*",
+        NAME: "[a-z]([a-z]|[0-9])+",
         FUNCT : "[a-z]+\(.*\)",
         NUM: "[-+]?([0-9]+\.[0-9]+|[0-9]+)",
         FUNCNAME: "[a-z]+([a-z]*|[0.9]*)",
@@ -229,11 +230,9 @@ return m;
 	},
 	AT:{
 		DATE:function(val,tok){
-			     console.log(val);
 				return [val];
 			},	
 		TIME:function(val,tok){
-			     console.log(val);
 				return [val];
 			},	
 			ERROR:function(val){return "SYNTAX ERROR: "+val;}
@@ -246,8 +245,26 @@ return m;
 			},	
 			ERROR:function(val){return "SYNTAX ERROR: "+val;}
 	},
-
+	OPERATION:{
+		NAME:function(val,tok){
+				var op = find(val,tok.NAME);
+				return [op];
+			},	
 			ERROR:function(val){return "SYNTAX ERROR: "+val;}
+	},
+	GET:{
+		NAME:function(val,tok){
+				var op = find(val,tok.NAME);
+				return [op];
+			},	
+			ERROR:function(val){return "SYNTAX ERROR: "+val;}
+	},
+
+	RESET:function(){console.log("RESET"); process.exit(0); },
+
+	ERROR:function(val){return "SYNTAX ERROR: "+val;}
 }
+
+
 
 };

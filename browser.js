@@ -11,19 +11,16 @@ function contains(a, obj) {
 
 
 module.exports = {
-get : function(bounds,response,params,fgrid,pg){
-var conString = "tcp://"+params.db.user+":"+params.db.pass+"@"+params.db.host+"/"+params.db.db+"";
-var db = new pg.Client(conString);
-        db.connect();
-			var sql = "select box, val from boxes where set = '"+bounds.set+"'";
-			console.log(sql);
+get : function(bounds,response,params,fgrid,db,sgl){
+		var name = sgl.GET[1][0][0];
+			var sql = "select box, val from boxes where set = '"+name+"'";
 		var query =  db.query(sql,function(err){console.log(err);
 
         							db.end();
 });
 
-			console.log();
 			var matrix =  Array();
+							matrix.push({name:name});
                                                 query.on('row', function(row,result) {
 							matrix.push({square:row.box,val:row.val});
                                                 });

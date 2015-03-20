@@ -20,12 +20,10 @@ function clone(obj) {
 }
 
 module.exports = {
-create : function(bounds,response,params,fgrid,pg,sgl){
+create : function(bounds,response,params,fgrid,db,sgl){
 				var hyp2 = Array();
 				var ontology = require('./class');var probs = require('./pdist');
 				   var payload = {grid:null,elements:null};var elements = {};
-var conString = "tcp://"+params.db.user+":"+params.db.pass+"@"+params.db.host+"/"+params.db.db+"";
-var db = new pg.Client(conString);
 
 				
 				var Entities = require('html-entities').AllHtmlEntities;
@@ -92,7 +90,6 @@ var db = new pg.Client(conString);
 
 
 				console.log("SQUARES:" + count);
-        db.connect();
                                 var q1=         db.query(bigsql,function(err,r){console.log("NO ERROR");});
                                 q1.on('end', function() {
                                                 var sqlhyp =" ";
@@ -254,16 +251,14 @@ var db = new pg.Client(conString);
 									if(err)console.log(err);
 									var sql = "select box, val from boxes where set = 'tmp'";
                 							var query2 =  db.query(sql,function(err){console.log(err);});
-									var matrix =  Array();
+									var matrix = Array();
+									if(sgl.hasOwnProperty("SAVETO")){
+									matrix.push({name:sgl.SAVETO[1][0][0]});
+									}
                                                 			query2.on('row', function(row,result) {
 		                        	                                matrix.push({square:row.box,val:row.val});
                 			                                });
                                                 			query2.on('end', function() {
-									var name = "";
-									if(sgl.hasOwnProperty("SAVETO")){
-									name = sgl.SAVETO[1][0][0];
-									}
-										matrix.name = name;
                                                                 		var json=(JSON.stringify(matrix));
 		                                                                response.write(json);
                 		                                                console.log("Map Sended :"+matrix.length+" boxes");
