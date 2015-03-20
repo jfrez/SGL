@@ -12,6 +12,9 @@ var tokens = {
 		};
 module.exports = {
 execute: function(sgl){
+		this.q = {};
+	 this.lex = Array();
+	this.values = Array();
 	this.visitor(sgl);
 	this.syntax();
 	return this.q;

@@ -52,6 +52,7 @@ var server = http.createServer(function(request, response) {
                	var tx = JSON.parse(data);
 			 if(tx.tx == "SGL"){
 				var syn = clone(sgl);
+				
 				var st = syn.execute(tx.sgl);
 				console.log(tx.sgl);
 				console.log(st);
